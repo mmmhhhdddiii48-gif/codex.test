@@ -1,0 +1,117 @@
+:root {
+  --bg: #0e141f;
+  --card: #151f30;
+  --text: #ecf0f7;
+  --muted: #a4b0c2;
+  --accent: #5ea0ff;
+  --border: #22324b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Cairo", "Segoe UI", Tahoma, sans-serif;
+  background: radial-gradient(circle at top, #1a2640, var(--bg) 55%);
+  color: var(--text);
+  min-height: 100dvh;
+}
+
+.app-shell {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+}
+
+.card {
+  background: color-mix(in srgb, var(--card) 88%, #ffffff 12%);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(8px);
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.hero-brand { display: flex; align-items: center; gap: 14px; }
+.brand-mark {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 1.9rem;
+  font-weight: 900;
+  color: white;
+  background: linear-gradient(135deg, #5ea0ff, #2f63c6);
+}
+
+h1 { margin: 0; font-size: 1.35rem; }
+h2 { margin-top: 0; }
+p { margin-bottom: 0; }
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.section-list ul { list-style: none; margin: 12px 0 0; padding: 0; }
+.section-list li {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 9px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #0f1625;
+  color: var(--text);
+  padding: 12px;
+  resize: vertical;
+  min-height: 160px;
+}
+
+button {
+  appearance: none;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #fff;
+  background: linear-gradient(135deg, #4b8fff, #2b64c9);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ghost-btn {
+  border: 1px solid var(--border);
+  background: #0f1a2d;
+}
+
+.actions-row {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin-top: 8px;
+}
+
+@media (max-width: 760px) {
+  .hero { flex-direction: column; align-items: flex-start; }
+  .grid-layout { grid-template-columns: 1fr; }
+}
