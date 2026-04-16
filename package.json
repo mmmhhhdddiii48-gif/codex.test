@@ -1,0 +1,19 @@
+{
+  "name": "tarteeb",
+  "version": "1.0.0",
+  "description": "Tarteeb mobile container powered by Capacitor",
+  "private": true,
+  "scripts": {
+    "sync": "npx cap sync",
+    "android": "npx cap open android",
+    "copy": "npx cap copy",
+    "run:android": "npx cap run android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.1.1",
+    "@capacitor/core": "^7.1.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.1.1"
+  }
+}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0e141f" />
+    <title>Tarteeb</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero card">
+        <div class="hero-brand">
+          <div class="brand-mark" aria-label="Tarteeb">ت</div>
+          <div>
+            <h1>ترتيب - Tarteeb</h1>
+            <p>تجربة هادئة ومرتبة للعمل اليومي، الآن جاهزة للأندرويد عبر Capacitor.</p>
+          </div>
+        </div>
+        <button id="sound-toggle" class="ghost-btn" type="button">🔊 نغمة تنبيه</button>
+      </header>
+
+      <main class="grid-layout">
+        <section class="card section-list">
+          <h2>الأقسام الحالية</h2>
+          <p class="muted">تم الحفاظ على هوية الأقسام الأساسية مع واجهة موبايل مرنة.</p>
+          <ul id="section-list"></ul>
+        </section>
+
+        <section class="card">
+          <h2>ملاحظات سريعة</h2>
+          <textarea id="notes" rows="8" placeholder="اكتب ملاحظاتك هنا..."></textarea>
+          <div class="actions-row">
+            <button id="save-notes" type="button">💾 حفظ محلي</button>
+            <button id="clear-notes" class="ghost-btn" type="button">🧹 مسح</button>
+          </div>
+          <p id="save-status" class="muted">جاهز للحفظ المحلي.</p>
+        </section>
+      </main>
+    </div>
+
+    <script src="./main.js" defer></script>
+  </body>
+</html>
