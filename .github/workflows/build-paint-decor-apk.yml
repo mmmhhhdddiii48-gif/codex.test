@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - paint-decor-apk-release-v2-2-0
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
