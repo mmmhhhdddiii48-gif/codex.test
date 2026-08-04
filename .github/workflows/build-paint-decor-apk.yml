@@ -14,20 +14,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Extract Android source
+
+      - name: Rebuild and verify Android source archive
         run: |
+          cat android-source/part_00.b64 android-source/part_01.b64 android-source/part_02.b64 android-source/part_03.b64 android-source/part_04.b64 android-source/part_05.b64 android-source/part_06.b64 android-source/part_07.b64 android-source/part_08.b64 > paint-decor-android-source.zip.b64
+          base64 --decode paint-decor-android-source.zip.b64 > paint-decor-android-source.zip
+          echo "1b353adae1d8f63490d5432e48a0ff5249622b107e99dd8b3797f2e8440dac22  paint-decor-android-source.zip" | sha256sum --check
           unzip -q paint-decor-android-source.zip
           mv paint_android_project paint-decor-android
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
       - uses: android-actions/setup-android@v3
+
       - name: Install Android SDK
         run: yes | sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
+
       - name: Generate release keystore
         working-directory: paint-decor-android
         run: >-
@@ -35,6 +44,7 @@ jobs:
           -storepass nukhbaTrial2026 -alias nukhba -keypass nukhbaTrial2026
           -keyalg RSA -keysize 2048 -validity 3650
           -dname "CN=Nukhba ERP, O=Nukhba, C=IQ"
+
       - name: Build signed release APK
         working-directory: paint-decor-android
         env:
@@ -43,12 +53,16 @@ jobs:
           RELEASE_KEY_ALIAS: nukhba
           RELEASE_KEY_PASSWORD: nukhbaTrial2026
         run: gradle --no-daemon clean assembleRelease
-      - name: Prepare release files
+
+      - name: Verify and prepare release
         working-directory: paint-decor-android
         run: |
+          test -f app/build/outputs/apk/release/app-release.apk
+          unzip -t app/build/outputs/apk/release/app-release.apk >/dev/null
           mkdir -p release
           cp app/build/outputs/apk/release/app-release.apk release/Nukhba-Paints-Decor-Trial-3-Days-v2.2.0.apk
           sha256sum release/Nukhba-Paints-Decor-Trial-3-Days-v2.2.0.apk > release/Nukhba-Paints-Decor-Trial-3-Days-v2.2.0.apk.sha256
+
       - uses: actions/upload-artifact@v4
         with:
           name: Nukhba-Paints-Decor-Trial-3-Days-v2.2.0
