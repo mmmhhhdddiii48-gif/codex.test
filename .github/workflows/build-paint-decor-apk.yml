@@ -17,7 +17,7 @@ jobs:
 
       - name: Rebuild and verify Android source archive
         run: |
-          cat android-source/part_00.b64 android-source/part_01.b64 android-source/part_02.b64 android-source/part_03.b64 android-source/part_04.b64 android-source/part_05.b64 android-source/part_06.b64 android-source/part_07.b64 android-source/part_08.b64 > paint-decor-android-source.zip.b64
+          cat android-source/part_00a.b64 android-source/part_00b.b64 android-source/part_01.b64 android-source/part_02.b64 android-source/part_03.b64 android-source/part_04.b64 android-source/part_05.b64 android-source/part_06.b64 android-source/part_07.b64 android-source/part_08.b64 > paint-decor-android-source.zip.b64
           base64 --decode paint-decor-android-source.zip.b64 > paint-decor-android-source.zip
           echo "1b353adae1d8f63490d5432e48a0ff5249622b107e99dd8b3797f2e8440dac22  paint-decor-android-source.zip" | sha256sum --check
           unzip -q paint-decor-android-source.zip
