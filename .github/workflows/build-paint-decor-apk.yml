@@ -1,0 +1,53 @@
+name: Build Paints Decor Android APK
+
+on:
+  push:
+    branches:
+      - paint-decor-apk-release-v2-2-0
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract Android source
+        run: |
+          unzip -q paint-decor-android-source.zip
+          mv paint_android_project paint-decor-android
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK
+        run: yes | sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Generate release keystore
+        working-directory: paint-decor-android
+        run: >-
+          keytool -genkeypair -v -keystore "$GITHUB_WORKSPACE/paint-decor-android/release.keystore"
+          -storepass nukhbaTrial2026 -alias nukhba -keypass nukhbaTrial2026
+          -keyalg RSA -keysize 2048 -validity 3650
+          -dname "CN=Nukhba ERP, O=Nukhba, C=IQ"
+      - name: Build signed release APK
+        working-directory: paint-decor-android
+        env:
+          RELEASE_STORE_FILE: ${{ github.workspace }}/paint-decor-android/release.keystore
+          RELEASE_STORE_PASSWORD: nukhbaTrial2026
+          RELEASE_KEY_ALIAS: nukhba
+          RELEASE_KEY_PASSWORD: nukhbaTrial2026
+        run: gradle --no-daemon clean assembleRelease
+      - name: Prepare release files
+        working-directory: paint-decor-android
+        run: |
+          mkdir -p release
+          cp app/build/outputs/apk/release/app-release.apk release/Nukhba-Paints-Decor-Trial-3-Days-v2.2.0.apk
+          sha256sum release/Nukhba-Paints-Decor-Trial-3-Days-v2.2.0.apk > release/Nukhba-Paints-Decor-Trial-3-Days-v2.2.0.apk.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Nukhba-Paints-Decor-Trial-3-Days-v2.2.0
+          path: paint-decor-android/release/*
+          retention-days: 30
