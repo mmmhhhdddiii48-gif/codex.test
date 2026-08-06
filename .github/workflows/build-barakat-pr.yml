@@ -1,6 +1,10 @@
 name: Build Barakat APK Temporary
 
 on:
+  push:
+    branches: [barakat-apk-build-temp-20260807]
+    paths:
+      - 'barakat-trigger/**'
   pull_request:
     branches: [main]
     paths:
@@ -38,13 +42,19 @@ jobs:
           BARAKAT_KEY_ALIAS: barakat
           BARAKAT_KEY_PASSWORD: Barakat2026!
         run: gradle --no-daemon -p "$RUNNER_TEMP/barakat-source/barakat_apk" clean :app:assembleRelease
-      - name: Prepare artifact
+      - name: Verify signature and prepare artifact
         run: |
+          APK="$RUNNER_TEMP/barakat-source/barakat_apk/app/build/outputs/apk/release/app-release.apk"
+          test -f "$APK"
+          unzip -t "$APK" >/dev/null
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging "$APK" | tee "$RUNNER_TEMP/badging.txt"
           mkdir output
-          cp "$RUNNER_TEMP/barakat-source/barakat_apk/app/build/outputs/apk/release/app-release.apk" output/Barakat_AlHijaz_Mobile_Trial_3_Days.apk
-          sha256sum output/Barakat_AlHijaz_Mobile_Trial_3_Days.apk > output/Barakat_AlHijaz_Mobile_Trial_3_Days.apk.sha256
+          cp "$APK" output/Barakat_AlHijaz_Mobile_Trial_3_Days_Install_Fix.apk
+          sha256sum output/Barakat_AlHijaz_Mobile_Trial_3_Days_Install_Fix.apk > output/Barakat_AlHijaz_Mobile_Trial_3_Days_Install_Fix.apk.sha256
+          cp "$RUNNER_TEMP/badging.txt" output/APK_BADGING.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: Barakat_AlHijaz_Mobile_Trial_3_Days_APK
+          name: Barakat_AlHijaz_Mobile_Trial_3_Days_Install_Fix
           path: output/*
-          retention-days: 3
+          retention-days: 7
