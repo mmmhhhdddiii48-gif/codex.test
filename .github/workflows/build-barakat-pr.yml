@@ -2,9 +2,11 @@ name: Build Barakat APK Temporary
 
 on:
   push:
-    branches: [barakat-apk-build-temp-20260807]
+    branches:
+      - 'barakat-apk-build-*'
     paths:
       - 'barakat-trigger/**'
+      - '.github/workflows/build-barakat-pr.yml'
   pull_request:
     branches: [main]
     paths:
