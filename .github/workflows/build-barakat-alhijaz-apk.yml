@@ -1,0 +1,72 @@
+name: Build Barakat AlHijaz 3-Day APK
+
+on:
+  push:
+    branches: [nukhba-distribution-mobile-v2]
+    paths:
+      - '.github/workflows/build-barakat-alhijaz-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout trigger repository
+        uses: actions/checkout@v4
+
+      - name: Fetch Barakat source
+        run: |
+          git clone --depth 1 --branch barakat-apk-trial-3d-20260807 https://github.com/mmmhhhdddiii48-gif/tarteeb-android-clean.git "$RUNNER_TEMP/barakat-source"
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Generate release signing key
+        run: |
+          keytool -genkeypair -v \
+            -keystore "$RUNNER_TEMP/barakat-release.jks" \
+            -storepass 'Barakat2026!' \
+            -keypass 'Barakat2026!' \
+            -alias 'barakat' \
+            -keyalg RSA -keysize 2048 -validity 3650 \
+            -dname 'CN=Barakat AlHijaz, OU=Demo, O=Barakat AlHijaz, L=Najaf, C=IQ'
+
+      - name: Build signed release APK
+        env:
+          BARAKAT_KEYSTORE: ${{ runner.temp }}/barakat-release.jks
+          BARAKAT_STORE_PASSWORD: Barakat2026!
+          BARAKAT_KEY_ALIAS: barakat
+          BARAKAT_KEY_PASSWORD: Barakat2026!
+        run: gradle --no-daemon -p "$RUNNER_TEMP/barakat-source/barakat_apk" clean :app:assembleRelease
+
+      - name: Prepare APK artifact
+        run: |
+          mkdir -p output
+          cp "$RUNNER_TEMP/barakat-source/barakat_apk/app/build/outputs/apk/release/app-release.apk" output/Barakat_AlHijaz_Mobile_Trial_3_Days.apk
+          sha256sum output/Barakat_AlHijaz_Mobile_Trial_3_Days.apk > output/Barakat_AlHijaz_Mobile_Trial_3_Days.apk.sha256
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Barakat_AlHijaz_Mobile_Trial_3_Days_APK
+          path: output/*
+          retention-days: 3
+          if-no-files-found: error
