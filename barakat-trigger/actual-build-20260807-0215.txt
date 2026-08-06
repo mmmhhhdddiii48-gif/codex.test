@@ -1,0 +1,1 @@
+Run the corrected Barakat AlHijaz APK build after branch sync.
