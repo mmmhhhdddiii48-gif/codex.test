@@ -1,0 +1,37 @@
+{
+  "name": "nukhba-distribution-pc-trial",
+  "version": "1.0.0",
+  "description": "Nukhba Distribution desktop customer trial",
+  "main": "main.js",
+  "author": "Nukhba ERP",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable nsis --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "31.7.7",
+    "electron-builder": "24.13.3"
+  },
+  "build": {
+    "appId": "com.nukhba.distribution.trial",
+    "productName": "Nukhba Distribution Trial",
+    "asar": true,
+    "directories": {"output": "dist"},
+    "files": ["main.js", "preload.js", "renderer/**/*", "package.json"],
+    "win": {
+      "artifactName": "Nukhba_Distribution_PC_Trial_3_Days_${version}_${arch}.${ext}",
+      "target": [
+        {"target": "portable", "arch": ["x64"]},
+        {"target": "nsis", "arch": ["x64"]}
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "النخبة للتوزيع - تجريبي"
+    }
+  }
+}

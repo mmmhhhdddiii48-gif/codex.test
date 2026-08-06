@@ -1,0 +1,38 @@
+name: Build Nukhba Distribution PC Trial
+on:
+  push:
+    branches: [nukhba-distribution-pc-exe]
+    paths:
+      - 'pc-distribution-trial/**'
+      - '.github/workflows/build-nukhba-distribution-pc.yml'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: pc-distribution-trial
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: pc-distribution-trial/package-lock.json
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build Windows EXE
+        run: npm run dist
+      - name: List artifacts
+        shell: powershell
+        run: Get-ChildItem -Recurse dist | Select-Object FullName,Length
+      - name: Upload Windows package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nukhba_Distribution_PC_Trial_3_Days_Windows
+          path: |
+            pc-distribution-trial/dist/*.exe
+          if-no-files-found: error
+          retention-days: 7
