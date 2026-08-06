@@ -7,7 +7,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win portable nsis --x64 --publish never"
+    "dist:portable": "electron-builder --win portable --x64 --publish never --config.win.artifactName=Nukhba_Distribution_PC_Trial_3_Days_Portable_${version}_${arch}.${ext}",
+    "dist:setup": "electron-builder --win nsis --x64 --publish never --config.win.artifactName=Nukhba_Distribution_PC_Trial_3_Days_Setup_${version}_${arch}.${ext}",
+    "dist": "npm run dist:portable && npm run dist:setup"
   },
   "devDependencies": {
     "electron": "31.7.7",
@@ -19,13 +21,7 @@
     "asar": true,
     "directories": {"output": "dist"},
     "files": ["main.js", "preload.js", "renderer/**/*", "package.json"],
-    "win": {
-      "artifactName": "Nukhba_Distribution_PC_Trial_3_Days_${version}_${arch}.${ext}",
-      "target": [
-        {"target": "portable", "arch": ["x64"]},
-        {"target": "nsis", "arch": ["x64"]}
-      ]
-    },
+    "win": {},
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
